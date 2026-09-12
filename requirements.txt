@@ -1,0 +1,18 @@
+# Dependências para LLDA e Modelagem de Tópicos (Ollama, Transformers, BERTopic)
+pandas>=2.0.0
+numpy>=1.24.0
+scikit-learn>=1.2.0
+ollama>=0.1.0
+
+# PyTorch e Hugging Face Transformers
+torch>=2.0.0
+transformers>=4.40.0
+bitsandbytes>=0.42.0
+accelerate>=0.28.0
+
+# Embeddings e Modelagem Semântica (BERTopic)
+sentence-transformers>=2.2.2
+bertopic>=0.16.0
+umap-learn>=0.5.5
+hdbscan>=0.8.33
+
