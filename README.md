@@ -12,6 +12,7 @@ Este repositório contém pipelines e experimentos para **Modelagem de Tópicos 
 * `diversity_influency.py`: Experimento de variação de `diversity_penalty` sobre o dataset 20 Newsgroups.
 * `analise_diversidade.py`: Pipeline de cálculo de métricas de diversidade lexical (*Distinct-2*), variabilidade (*Unique Topic Rate*), diversidade semântica (cosseno sobre embeddings MPNet) e coerência tópica.
 * `bertopic_aggregator.py`: Módulo e CLI para clusterização e agregação de macro-tópicos via BERTopic (UMAP + HDBSCAN) sobre os tópicos gerados por LLMs.
+* `ollama_test.py`: Script minimalista de teste de conexão com o Ollama.
 * `requirements.txt`: Lista de dependências do projeto.
 
 ---
