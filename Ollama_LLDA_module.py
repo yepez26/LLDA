@@ -6,11 +6,24 @@ import numpy as np
 import os
 import time
 from difflib import SequenceMatcher # Import for string similarity
-
-from sklearn.datasets import fetch_20newsgroups
+from dataset_loader import load_dataset
 
 class TopicModeler:
-    def __init__(self, model_name, system_prompt, temperature, max_tokens, num_suggestions, output_path, dataset_subset="all", dataset_remove=("headers", "footers", "quotes"), diversity_penalty_threshold=0.7, diversity_penalty_strength=0.2):
+    def __init__(
+        self,
+        model_name,
+        system_prompt,
+        temperature,
+        max_tokens,
+        num_suggestions,
+        output_path,
+        dataset_name="20newsgroups",
+        dataset_subset="all",
+        dataset_path=None,
+        dataset_remove=("headers", "footers", "quotes"),
+        diversity_penalty_threshold=0.7,
+        diversity_penalty_strength=0.2
+    ):
         """
         Initializes the TopicModeler with LLM configurations, dataset, and output path.
 
@@ -21,8 +34,10 @@ class TopicModeler:
             max_tokens (int): The maximum number of tokens for topic generation.
             num_suggestions (int): The number of topic suggestions to generate per document.
             output_path (str): The file path to save the topic modeling results.
-            dataset_subset (str): Subset of the 20 Newsgroups dataset to load ("all", "train", "test").
-            dataset_remove (tuple): Parts of the dataset to remove ("headers", "footers", "quotes").
+            dataset_name (str): Dataset to load ("20newsgroups" or "aapd").
+            dataset_subset (str): Subset of the dataset to load ("all", "train", "test", "dev").
+            dataset_path (str): Custom directory path for datasets (e.g., "Castor-data/datasets/AAPD").
+            dataset_remove (tuple): Parts of the dataset to remove (for 20 Newsgroups).
             diversity_penalty_threshold (float): Similarity threshold (0-1). Topics above this are considered similar for penalty.
             diversity_penalty_strength (float): Factor (0-1) to reduce confidence for similar topics. Higher means stronger penalty.
         """
@@ -32,7 +47,9 @@ class TopicModeler:
         self.max_tokens = max_tokens
         self.num_suggestions = num_suggestions
         self.output_path = output_path
+        self.dataset_name = dataset_name
         self.dataset_subset = dataset_subset
+        self.dataset_path = dataset_path
         self.dataset_remove = dataset_remove
         self.diversity_penalty_threshold = diversity_penalty_threshold
         self.diversity_penalty_strength = diversity_penalty_strength
@@ -42,18 +59,23 @@ class TopicModeler:
 
 
     def _load_dataset(self):
-        """Loads the 20 Newsgroups dataset."""
-        print("Carregando 20 Newsgroups...")
-        data = fetch_20newsgroups(
+        """Loads the selected dataset (20 Newsgroups or AAPD)."""
+        data = load_dataset(
+            dataset_name=self.dataset_name,
             subset=self.dataset_subset,
-            remove=self.dataset_remove
+            dataset_path=self.dataset_path,
+            dataset_remove=self.dataset_remove
         )
-        self.docs = data["data"]
+        self.docs = data.docs
         self.target_names = data.target_names
+        self.targets = data.targets
+        self.targets_multilabel = data.targets_multilabel
         print(f"Documentos carregados: {len(self.docs)}")
-        print("\nAs 20 classificações possíveis são:")
-        for i, name in enumerate(self.target_names):
+        print(f"\nTotal de classificações ({len(self.target_names)}):")
+        for i, name in enumerate(self.target_names[:20]):
             print(f"{i+1}. {name}")
+        if len(self.target_names) > 20:
+            print(f"... e mais {len(self.target_names) - 20} categorias.")
 
     def _test_ollama_connection(self):
         """Tests connection to Ollama and checks for model availability."""

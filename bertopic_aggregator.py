@@ -37,10 +37,7 @@ try:
 except ImportError:
     HDBSCAN = None
 
-try:
-    from sklearn.datasets import fetch_20newsgroups
-except ImportError:
-    fetch_20newsgroups = None
+from dataset_loader import load_dataset
 
 
 def clean_topic_text(topic: Union[str, float]) -> str:
@@ -167,7 +164,9 @@ class BERTopicAggregator:
         df: pd.DataFrame,
         topic_column: str = "topico_sugerido",
         doc_id_column: Optional[str] = "doc_id",
-        attach_20newsgroups_labels: bool = False,
+        attach_dataset_labels: Optional[str] = None,  # '20newsgroups' ou 'aapd'
+        attach_20newsgroups_labels: bool = False,  # Retrocompatibilidade
+        dataset_path: Optional[str] = None,
     ) -> pd.DataFrame:
         """
         Executa a modelagem de tópicos sobre uma coluna do DataFrame e adiciona as novas marcações.
@@ -176,7 +175,9 @@ class BERTopicAggregator:
             df: DataFrame contendo os documentos/tópicos sugeridos.
             topic_column: Nome da coluna contendo os tópicos sugeridos pelo LLM.
             doc_id_column: Nome da coluna do ID do documento (opcional).
-            attach_20newsgroups_labels: Se True, tenta vincular os rótulos de categoria do 20 Newsgroups.
+            attach_dataset_labels: Nome do dataset para anexar labels reais ('20newsgroups' ou 'aapd').
+            attach_20newsgroups_labels: Se True, anexa labels do 20 Newsgroups (retrocompatibilidade).
+            dataset_path: Caminho da pasta do dataset (para AAPD).
 
         Returns:
             pd.DataFrame enriquecido com:
@@ -231,24 +232,24 @@ class BERTopicAggregator:
         else:
             df_result["bertopic_top_words"] = ""
 
-        # 7. Opcional: Associar labels originais do 20 Newsgroups
-        if attach_20newsgroups_labels and fetch_20newsgroups is not None and doc_id_column and doc_id_column in df_result.columns:
+        # 7. Opcional: Associar labels originais (20 Newsgroups ou AAPD)
+        attach_ds = attach_dataset_labels or ("20newsgroups" if attach_20newsgroups_labels else None)
+        if attach_ds and doc_id_column and doc_id_column in df_result.columns:
             try:
-                print("[BERTopicAggregator] Buscando labels originais do dataset 20 Newsgroups...")
-                data_20ng = fetch_20newsgroups(subset="all", remove=("headers", "footers", "quotes"))
-                category_mapping = {i: name for i, name in enumerate(data_20ng.target_names)}
+                print(f"[BERTopicAggregator] Buscando labels originais do dataset '{attach_ds}'...")
+                ds_container = load_dataset(dataset_name=attach_ds, dataset_path=dataset_path)
                 
                 target_df = pd.DataFrame({
-                    doc_id_column: range(len(data_20ng.target)),
-                    "target_id": data_20ng.target,
-                    "target_name": [category_mapping[t] for t in data_20ng.target]
+                    doc_id_column: range(len(ds_container.targets)),
+                    "target_id": ds_container.targets,
+                    "target_name": ds_container.target_labels_text
                 })
                 # Assegura que o tipo de dado de doc_id coincida
                 target_df[doc_id_column] = target_df[doc_id_column].astype(df_result[doc_id_column].dtype)
                 df_result = pd.merge(df_result, target_df, on=doc_id_column, how="left")
-                print("[BERTopicAggregator] Labels do 20 Newsgroups adicionadas com sucesso.")
+                print(f"[BERTopicAggregator] Labels do dataset '{attach_ds}' adicionadas com sucesso.")
             except Exception as e:
-                print(f"[BERTopicAggregator] Aviso ao carregar 20 Newsgroups: {e}")
+                print(f"[BERTopicAggregator] Aviso ao carregar labels do dataset '{attach_ds}': {e}")
 
         n_clusters = len(set(clusters) - {-1})
         n_outliers = (df_result["bertopic_cluster"] == -1).sum()
@@ -344,7 +345,9 @@ def process_topics_csv(
     embedding_model_name: str = "all-MiniLM-L6-v2",
     min_cluster_size: int = 50,
     nr_topics: Union[str, int] = "auto",
+    attach_dataset_labels: Optional[str] = None,
     attach_20newsgroups_labels: bool = False,
+    dataset_path: Optional[str] = None,
 ) -> pd.DataFrame:
     """
     Função utilitária direta para ler um arquivo CSV, aplicar o BERTopicAggregator e salvar o resultado.
@@ -357,7 +360,9 @@ def process_topics_csv(
         embedding_model_name: Nome do modelo de embeddings.
         min_cluster_size: Tamanho mínimo do cluster.
         nr_topics: 'auto' ou número fixo de tópicos.
-        attach_20newsgroups_labels: Se True, anexa as labels de benchmark do 20 Newsgroups.
+        attach_dataset_labels: Nome do dataset ('20newsgroups' ou 'aapd').
+        attach_20newsgroups_labels: Se True, anexa labels do 20 Newsgroups (retrocompatibilidade).
+        dataset_path: Caminho da pasta do dataset (para AAPD).
 
     Returns:
         pd.DataFrame com as anotações do BERTopic.
@@ -375,7 +380,9 @@ def process_topics_csv(
         df=df,
         topic_column=topic_column,
         doc_id_column=doc_id_column,
+        attach_dataset_labels=attach_dataset_labels,
         attach_20newsgroups_labels=attach_20newsgroups_labels,
+        dataset_path=dataset_path,
     )
 
     print(f"\n[process_topics_csv] Salvando resultados em '{output_csv}'...")
@@ -434,6 +441,18 @@ def main():
         help="Redução de tópicos no BERTopic ('auto' ou número inteiro, default: 'auto').",
     )
     parser.add_argument(
+        "--attach-dataset",
+        type=str,
+        default=None,
+        help="Nome do dataset para buscar classes reais ('20newsgroups' ou 'aapd').",
+    )
+    parser.add_argument(
+        "--dataset-path",
+        type=str,
+        default=None,
+        help="Caminho para os arquivos do dataset (para AAPD, ex: 'Castor-data/datasets/AAPD').",
+    )
+    parser.add_argument(
         "--attach-20newsgroups",
         action="store_true",
         help="Se informado, busca e mescla as classes reais do 20 Newsgroups via scikit-learn.",
@@ -452,6 +471,8 @@ def main():
         print(f"Erro: Arquivo de entrada '{args.input}' não encontrado.")
         return
 
+    attach_ds = args.attach_dataset or ("20newsgroups" if args.attach_20newsgroups else None)
+
     df_annotated = process_topics_csv(
         input_csv=args.input,
         output_csv=args.output,
@@ -460,7 +481,8 @@ def main():
         embedding_model_name=args.embedding_model,
         min_cluster_size=args.min_cluster_size,
         nr_topics=nr_topics_val,
-        attach_20newsgroups_labels=args.attach_20newsgroups,
+        attach_dataset_labels=attach_ds,
+        dataset_path=args.dataset_path,
     )
 
     print("\n--- Primeiras 10 linhas anotadas ---")

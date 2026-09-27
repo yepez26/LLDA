@@ -6,28 +6,34 @@ import numpy as np
 import os
 import time
 
-from sklearn.datasets import fetch_20newsgroups
+from dataset_loader import load_dataset
 
 
 # ============================================================
 # 1. CARREGAR DATASET
 # ============================================================
 
-print("Carregando 20 Newsgroups...")
+DATASET_NAME = "20newsgroups"  # Opções: "20newsgroups" ou "aapd"
+DATASET_PATH = None  # Caminho para Castor-data/datasets/AAPD se DATASET_NAME="aapd"
 
-data = fetch_20newsgroups(
+print(f"Carregando dataset '{DATASET_NAME}'...")
+
+data = load_dataset(
+    dataset_name=DATASET_NAME,
     subset="all",
-    remove=("headers", "footers", "quotes")
+    dataset_path=DATASET_PATH,
+    dataset_remove=("headers", "footers", "quotes")
 )
 
-docs = data["data"]
-y = data["target"]
+docs = data.docs
+y = data.targets
 
 print(f"Documentos: {len(docs)}")
-
-print("\nAs 20 classificações possíveis são:")
-for i, name in enumerate(data.target_names):
+print(f"\nTotal de classificações ({len(data.target_names)}):")
+for i, name in enumerate(data.target_names[:20]):
     print(f"{i+1}. {name}")
+if len(data.target_names) > 20:
+    print(f"... e mais {len(data.target_names) - 20} categorias.")
 
 
 # ============================================================

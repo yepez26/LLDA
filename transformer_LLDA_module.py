@@ -1,8 +1,8 @@
 import random
 import torch
 import pandas as pd
-from sklearn.datasets import fetch_20newsgroups
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from dataset_loader import load_dataset
 
 
 class TopicModeler:
@@ -10,12 +10,13 @@ class TopicModeler:
         self,
         model_name,
         system_prompt,
-        
         max_tokens,
         num_suggestions,
         output_path,
         temperature=0.1,
+        dataset_name="20newsgroups",
         dataset_subset="all",
+        dataset_path=None,
         dataset_remove=("headers", "footers", "quotes"),
         diversity_penalty=0.5
     ):
@@ -25,7 +26,9 @@ class TopicModeler:
         self.max_tokens = max_tokens
         self.num_suggestions = num_suggestions
         self.output_path = output_path
+        self.dataset_name = dataset_name
         self.dataset_subset = dataset_subset
+        self.dataset_path = dataset_path
         self.dataset_remove = dataset_remove
         self.diversity_penalty = diversity_penalty
 
@@ -35,18 +38,23 @@ class TopicModeler:
         self._load_dataset()
 
     def _load_dataset(self):
-        """Loads the 20 Newsgroups dataset."""
-        print("Carregando 20 Newsgroups...")
-        data = fetch_20newsgroups(
+        """Loads the selected dataset (20 Newsgroups or AAPD)."""
+        data = load_dataset(
+            dataset_name=self.dataset_name,
             subset=self.dataset_subset,
-            remove=self.dataset_remove
+            dataset_path=self.dataset_path,
+            dataset_remove=self.dataset_remove
         )
-        self.docs = data["data"]
+        self.docs = data.docs
         self.target_names = data.target_names
+        self.targets = data.targets
+        self.targets_multilabel = data.targets_multilabel
         print(f"Documentos carregados: {len(self.docs)}")
-        print("\nAs 20 classificações possíveis são:")
-        for i, name in enumerate(self.target_names):
+        print(f"\nTotal de classificações ({len(self.target_names)}):")
+        for i, name in enumerate(self.target_names[:20]):
             print(f"{i+1}. {name}")
+        if len(self.target_names) > 20:
+            print(f"... e mais {len(self.target_names) - 20} categorias.")
 
 
     def load_model(self):

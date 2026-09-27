@@ -8,6 +8,10 @@ from transformer_LLDA_module import TopicModeler
 
 # --- Configurações do experimento ---
 MODEL_NAME = "meta-llama/Meta-Llama-3-8B-Instruct"
+DATASET_NAME = "20newsgroups"  # Opções: "20newsgroups" ou "aapd"
+DATASET_PATH = None  # Ex: "Castor-data/datasets/AAPD" (necessário se DATASET_NAME='aapd')
+DATASET_SUBSET = "all"
+
 SYSTEM_PROMPT = (
     " You are a topic analyst. Your task is to identify the main theme of the provided text "
     "and summarize it as a concise topic consisting of 2 to 5 words. "
@@ -36,6 +40,9 @@ def main():
         system_prompt=SYSTEM_PROMPT,
         max_tokens=MAX_TOKENS,
         num_suggestions=NUM_SUGGESTIONS,
+        dataset_name=DATASET_NAME,
+        dataset_path=DATASET_PATH,
+        dataset_subset=DATASET_SUBSET,
         diversity_penalty=DIVERSITY_VALUES[0],
         output_path=OUTPUT_PATH,
     )
