@@ -1,0 +1,29 @@
+{
+  "seed": 42,
+  "k_values": [
+    10,
+    54
+  ],
+  "iterations": 35,
+  "coverage": 0.8,
+  "max_input_characters_direct": 1500,
+  "llda_titles": "reused from original CSV; original generation capped at 1500 characters",
+  "evaluation": "descriptive, all 2000 documents; labels used only after topic fitting",
+  "vectorizer": {
+    "min_df": 2,
+    "max_df": 0.95,
+    "max_features": 10000,
+    "ngram_range": [
+      1,
+      2
+    ]
+  },
+  "data_sha256": "e8c3e892651e1e3007fe0d19c91e4334ca3b40bcb3504f8602b811daacf8a98a",
+  "diagnostic_documents": 1986,
+  "empty_documents_policy": "same intersection of nonempty vectorized documents for both diagnostics; LDA fits all 2000",
+  "versions": {
+    "numpy": "2.5.2",
+    "pandas": "3.0.5",
+    "scikit-learn": "1.9.0"
+  }
+}

@@ -1,0 +1,14 @@
+numpy>=1.24
+scipy>=1.10
+pandas>=2.0
+scikit-learn>=1.2
+bertopic>=0.17,<0.18
+sentence-transformers>=3.0
+umap-learn>=0.5.5
+hdbscan>=0.8.33
+plotly>=5.0
+nbformat>=4.2
+
+# Ensaio LLDA com restrição de tokens (usa APIs do Transformers 5)
+torch>=2.0
+transformers>=5.0,<6

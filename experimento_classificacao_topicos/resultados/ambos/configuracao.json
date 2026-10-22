@@ -1,0 +1,463 @@
+{
+  "seed": 42,
+  "method": "ambos",
+  "iterations": 20,
+  "seed_strength": 20.0,
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "local_files_only": true,
+  "data_path": "/home/jesus/Documentos/LLDA/experimento_aapd_comparativo/experimento_aapd_comparativo.csv",
+  "classes": [
+    "cmp-lg",
+    "cond-mat.dis-nn",
+    "cond-mat.stat-mech",
+    "cs.AI",
+    "cs.CC",
+    "cs.CE",
+    "cs.CG",
+    "cs.CL",
+    "cs.CR",
+    "cs.CV",
+    "cs.CY",
+    "cs.DB",
+    "cs.DC",
+    "cs.DL",
+    "cs.DM",
+    "cs.DS",
+    "cs.FL",
+    "cs.GT",
+    "cs.HC",
+    "cs.IR",
+    "cs.IT",
+    "cs.LG",
+    "cs.LO",
+    "cs.MA",
+    "cs.MM",
+    "cs.MS",
+    "cs.NA",
+    "cs.NE",
+    "cs.NI",
+    "cs.PF",
+    "cs.PL",
+    "cs.RO",
+    "cs.SC",
+    "cs.SE",
+    "cs.SI",
+    "cs.SY",
+    "math.CO",
+    "math.IT",
+    "math.LO",
+    "math.NA",
+    "math.NT",
+    "math.OC",
+    "math.PR",
+    "math.ST",
+    "nlin.AO",
+    "physics.data-an",
+    "physics.soc-ph",
+    "q-bio.NC",
+    "q-bio.QM",
+    "quant-ph",
+    "stat.AP",
+    "stat.ME",
+    "stat.ML",
+    "stat.TH"
+  ],
+  "descriptions": [
+    "Computation and language",
+    "Disordered systems and neural networks",
+    "Statistical mechanics",
+    "Artificial intelligence",
+    "Computational complexity",
+    "Computational engineering finance and science",
+    "Computational geometry",
+    "Computational linguistics and natural language processing",
+    "Cryptography and security",
+    "Computer vision and pattern recognition",
+    "Computers and society",
+    "Databases",
+    "Distributed parallel and cluster computing",
+    "Digital libraries",
+    "Discrete mathematics",
+    "Data structures and algorithms",
+    "Formal languages and automata theory",
+    "Computer science and game theory",
+    "Human computer interaction",
+    "Information retrieval",
+    "Information theory",
+    "Machine learning",
+    "Logic in computer science",
+    "Multiagent systems",
+    "Multimedia",
+    "Mathematical software",
+    "Numerical analysis",
+    "Neural and evolutionary computing",
+    "Networking and internet architecture",
+    "Computer performance",
+    "Programming languages",
+    "Robotics",
+    "Symbolic computation",
+    "Software engineering",
+    "Social and information networks",
+    "Systems and control",
+    "Combinatorics",
+    "Information theory",
+    "Mathematical logic",
+    "Numerical analysis",
+    "Number theory",
+    "Optimization and control",
+    "Probability",
+    "Statistics theory",
+    "Adaptation and self organizing systems",
+    "Data analysis statistics and probability",
+    "Physics and society",
+    "Neurons and cognition",
+    "Quantitative methods in biology",
+    "Quantum physics",
+    "Statistics applications",
+    "Statistics methodology",
+    "Statistical machine learning",
+    "Statistics theory"
+  ],
+  "seed_topics": [
+    [
+      "linguistics",
+      "parsing",
+      "translation",
+      "language"
+    ],
+    [
+      "disorder",
+      "spin glass",
+      "neural",
+      "networks"
+    ],
+    [
+      "statistical mechanics",
+      "entropy",
+      "phase transition",
+      "lattice"
+    ],
+    [
+      "reasoning",
+      "intelligence",
+      "planning",
+      "knowledge"
+    ],
+    [
+      "complexity",
+      "hardness",
+      "polynomial",
+      "completeness"
+    ],
+    [
+      "simulation",
+      "engineering",
+      "finance",
+      "computational"
+    ],
+    [
+      "geometry",
+      "triangulation",
+      "polygon",
+      "convex hull"
+    ],
+    [
+      "language",
+      "parsing",
+      "translation",
+      "linguistics"
+    ],
+    [
+      "cryptography",
+      "encryption",
+      "security",
+      "privacy"
+    ],
+    [
+      "image",
+      "vision",
+      "recognition",
+      "segmentation"
+    ],
+    [
+      "society",
+      "ethics",
+      "policy",
+      "social"
+    ],
+    [
+      "database",
+      "query",
+      "relational",
+      "transactions"
+    ],
+    [
+      "distributed",
+      "parallel",
+      "synchronization",
+      "consensus"
+    ],
+    [
+      "library",
+      "archives",
+      "metadata",
+      "documents"
+    ],
+    [
+      "discrete",
+      "combinatorics",
+      "graph",
+      "coloring"
+    ],
+    [
+      "algorithm",
+      "sorting",
+      "data structures",
+      "approximation"
+    ],
+    [
+      "automata",
+      "grammar",
+      "formal language",
+      "regular"
+    ],
+    [
+      "game",
+      "equilibrium",
+      "auction",
+      "mechanism"
+    ],
+    [
+      "interaction",
+      "interface",
+      "usability",
+      "users"
+    ],
+    [
+      "retrieval",
+      "search",
+      "relevance",
+      "ranking"
+    ],
+    [
+      "information theory",
+      "channel",
+      "coding",
+      "capacity"
+    ],
+    [
+      "learning",
+      "classification",
+      "regression",
+      "training"
+    ],
+    [
+      "logic",
+      "verification",
+      "proof",
+      "satisfiability"
+    ],
+    [
+      "agents",
+      "coordination",
+      "cooperation",
+      "multiagent"
+    ],
+    [
+      "multimedia",
+      "video",
+      "audio",
+      "media"
+    ],
+    [
+      "software",
+      "numerical",
+      "symbolic",
+      "computation"
+    ],
+    [
+      "numerical",
+      "convergence",
+      "discretization",
+      "approximation"
+    ],
+    [
+      "neural",
+      "evolutionary",
+      "genetic",
+      "optimization"
+    ],
+    [
+      "network",
+      "routing",
+      "internet",
+      "wireless"
+    ],
+    [
+      "performance",
+      "queueing",
+      "latency",
+      "throughput"
+    ],
+    [
+      "programming",
+      "compiler",
+      "types",
+      "semantics"
+    ],
+    [
+      "robot",
+      "navigation",
+      "motion",
+      "control"
+    ],
+    [
+      "symbolic",
+      "algebra",
+      "polynomial",
+      "computation"
+    ],
+    [
+      "software",
+      "testing",
+      "debugging",
+      "requirements"
+    ],
+    [
+      "social network",
+      "community",
+      "diffusion",
+      "graph"
+    ],
+    [
+      "control",
+      "stability",
+      "dynamical",
+      "feedback"
+    ],
+    [
+      "combinatorics",
+      "enumeration",
+      "graph",
+      "permutation"
+    ],
+    [
+      "information theory",
+      "channel",
+      "coding",
+      "capacity"
+    ],
+    [
+      "logic",
+      "theorem",
+      "decidability",
+      "models"
+    ],
+    [
+      "numerical",
+      "convergence",
+      "discretization",
+      "approximation"
+    ],
+    [
+      "number theory",
+      "primes",
+      "arithmetic",
+      "diophantine"
+    ],
+    [
+      "optimization",
+      "control",
+      "convex",
+      "constraints"
+    ],
+    [
+      "probability",
+      "stochastic",
+      "random",
+      "martingale"
+    ],
+    [
+      "statistics",
+      "estimator",
+      "inference",
+      "asymptotic"
+    ],
+    [
+      "adaptation",
+      "self organization",
+      "emergence",
+      "dynamics"
+    ],
+    [
+      "data analysis",
+      "statistics",
+      "measurement",
+      "uncertainty"
+    ],
+    [
+      "social",
+      "population",
+      "collective",
+      "dynamics"
+    ],
+    [
+      "neuron",
+      "brain",
+      "cognition",
+      "neural"
+    ],
+    [
+      "biology",
+      "quantitative",
+      "biological",
+      "inference"
+    ],
+    [
+      "quantum",
+      "entanglement",
+      "qubit",
+      "measurement"
+    ],
+    [
+      "applied statistics",
+      "data",
+      "estimation",
+      "modeling"
+    ],
+    [
+      "statistical methods",
+      "inference",
+      "estimation",
+      "sampling"
+    ],
+    [
+      "learning",
+      "classification",
+      "regression",
+      "statistical"
+    ],
+    [
+      "statistics",
+      "estimator",
+      "inference",
+      "asymptotic"
+    ]
+  ],
+  "versions": {
+    "numpy": "2.5.2",
+    "scipy": "1.18.0",
+    "pandas": "3.0.5",
+    "scikit-learn": "1.9.0",
+    "bertopic": "0.17.4",
+    "sentence-transformers": "6.0.0",
+    "umap-learn": "0.5.12",
+    "hdbscan": "0.8.44"
+  },
+  "split": {
+    "treino": 1200,
+    "validacao": 300,
+    "teste": 500
+  },
+  "min_cluster_size": 15
+}

@@ -16,3 +16,7 @@ bertopic>=0.16.0
 umap-learn>=0.5.5
 hdbscan>=0.8.33
 
+# Visualização e Notebooks
+plotly>=5.0.0
+nbformat>=4.2.0
+
